@@ -6,6 +6,8 @@
   <title>Planilla Verde | SUTERM Sección 148</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Script añadido para el efecto 3D de las tarjetas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -22,7 +24,9 @@
     .glass-card { background: rgba(20, 83, 45, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(74, 222, 128, 0.18); }
     .glass-nav { background: rgba(5, 46, 22, 0.85); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(74, 222, 128, 0.15); }
     .text-gradient { background: linear-gradient(135deg, #ffffff 20%, #4ade80 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .modal-backdrop { transition: opacity 0.3s ease-out; }
+    
+    /* Transición de modal modificada para suavizar el fondo */
+    .modal-backdrop { transition: opacity 0.3s ease-out, backdrop-filter 0.3s ease-out; }
     .modal-content { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
   
     #scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #16a34a, #4ade80, #22c55e); z-index: 100; width: 0%; box-shadow: 0 0 10px #4ade80; transition: width 0.1s ease-out; }
@@ -37,26 +41,36 @@
     .reveal-item { opacity: 0; transform: translateY(22px); transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
     .reveal-item.revealed { opacity: 1; transform: translateY(0); }
 
-    #toast-msg { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 70; opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    #toast-msg { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 70; opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     #toast-msg.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    /* MOTOR DE ESCALADO TIPOGRÁFICO CON PREVENCIÓN DE SOLAPAMIENTO */
+    /* MOTOR DE ESCALADO TIPOGRÁFICO FIJO AL 140% */
     :root {
-      --app-font-scale: 1;
+      --app-font-scale: 1.4;
     }
     
-    .scalable-text-content .text-\[10px\]:not(.font-scale-ignore) { font-size: calc(10px * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-\[11px\]:not(.font-scale-ignore) { font-size: calc(11px * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-xs:not(.font-scale-ignore)       { font-size: calc(0.75rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-sm:not(.font-scale-ignore)       { font-size: calc(0.875rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-base:not(.font-scale-ignore)     { font-size: calc(1rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-lg:not(.font-scale-ignore)       { font-size: calc(1.125rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-xl:not(.font-scale-ignore)       { font-size: calc(1.25rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
-    .scalable-text-content .text-2xl:not(.font-scale-ignore)      { font-size: calc(1.5rem * var(--app-font-scale)) !important; line-height: 1.4 !important; transition: font-size 0.2s ease-in-out; }
+    .scalable-text-content .text-\[10px\]:not(.font-scale-ignore) { font-size: calc(10px * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-\[11px\]:not(.font-scale-ignore) { font-size: calc(11px * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-xs:not(.font-scale-ignore)       { font-size: calc(0.75rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-sm:not(.font-scale-ignore)       { font-size: calc(0.875rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-base:not(.font-scale-ignore)     { font-size: calc(1rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-lg:not(.font-scale-ignore)       { font-size: calc(1.125rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-xl:not(.font-scale-ignore)       { font-size: calc(1.25rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
+    .scalable-text-content .text-2xl:not(.font-scale-ignore)      { font-size: calc(1.5rem * var(--app-font-scale)) !important; line-height: 1.4 !important; }
     
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: rgba(20, 83, 45, 0.5); }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(74, 222, 128, 0.5); border-radius: 10px; }
+
+    /* Animación de levitación añadida */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="bg-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white">
@@ -66,21 +80,6 @@
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
     <span id="toast-text">Enlace copiado al portapapeles</span>
   </div>
-
-  <aside aria-label="Control de tamaño de texto" class="fixed bottom-5 left-4 sm:left-6 z-[100] flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-900/95 border border-accent-400/40 shadow-2xl shadow-green-950/80 backdrop-blur-xl select-none">
-    <button id="btn-font-dec" onclick="adjustFontSize(-0.15)" title="Disminuir tamaño de texto" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition">
-      <i data-lucide="minus" class="w-3.5 h-3.5"></i>
-    </button>
-    <div class="flex items-center gap-1 px-1.5 text-[11px] font-bold text-accent-400">
-      <i data-lucide="type" class="w-3.5 h-3.5"></i>
-      <span id="font-scale-indicator" class="w-9 text-center tabular-nums">100%</span>
-    </div>
-    <button id="btn-font-inc" onclick="adjustFontSize(0.15)" title="Aumentar tamaño de texto" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition">
-      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-    </button>
-    <div class="h-3 w-px bg-slate-700 mx-0.5"></div>
-    <button onclick="resetFontSize()" title="Restablecer tamaño (100%)" class="px-1.5 py-0.5 rounded text-[10px] font-semibold text-slate-400 hover:text-white hover:bg-white/10 transition">100%</button>
-  </aside>
 
   <header class="fixed top-0 left-0 right-0 z-40 glass-nav py-3">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
@@ -113,8 +112,8 @@
       <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <!-- Cintillo de invitación con dos renglones separados -->
-        <div class="inline-flex flex-col items-center gap-1 px-5 py-3 rounded-2xl border border-accent-400/40 bg-accent-500/10 text-accent-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 font-scale-ignore shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+        <!-- Clase animate-float añadida aquí -->
+        <div class="inline-flex flex-col items-center gap-1 px-5 py-3 rounded-2xl border border-accent-400/40 bg-accent-500/10 text-accent-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 font-scale-ignore shadow-[0_0_15px_rgba(74,222,128,0.2)] animate-float">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-accent-400 animate-pulse"></span>
             <span>¡TU VOTO PUEDE SER DECISIVO!</span>
@@ -123,10 +122,10 @@
         </div>
 
         <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6">
-          Firmeza Técnica y <br><span class="text-gradient">Legalidad Sindical en Planta</span>
+          Firmeza Técnica y <br><span class="text-gradient">Legalidad Sindical</span>
         </h1>
         <p class="max-w-3xl mx-auto text-base sm:text-xl text-slate-300 font-normal mb-10">
-          Especialistas probados de operación y mantenimiento unidos por un sindicato horizontal, con cuentas claras y defensa irrestricta de nuestro Contrato Colectivo de Trabajo.
+          Especialistas probados de operación, mantenimiento y administración. Unidos por un sindicato horizontal, con cuentas claras y defensa irrestricta de nuestro Contrato Colectivo de Trabajo.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
           <a href="#equipo" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold text-sm shadow-xl shadow-brand-600/30 hover:shadow-accent-500/30 hover:scale-105 transition duration-200 font-scale-ignore">
@@ -136,7 +135,6 @@
             Buscador de Compromisos
           </a>
         </div>
-        <!-- Quick Metrics Strip -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto text-left">
           <div class="p-4 rounded-xl glass-card border border-white/5">
             <div class="text-2xl font-black text-accent-400 font-scale-ignore">100%</div>
@@ -158,13 +156,14 @@
       </div>
     </section>
 
-    <section id="equipo" class="py-20 bg-brand-900/20 border-t border-slate-800">
+    <!-- SECCIÓN: COMITÉ EJECUTIVO -->
+    <section id="equipo" class="pt-20 pb-16 bg-brand-900/20 border-t border-slate-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
             <span class="text-accent-400 font-bold uppercase tracking-widest text-xs font-scale-ignore">Comité y Representantes</span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Nuestra Comitiva Seccional</h2>
-            <p class="text-slate-400 text-sm mt-2 max-w-xl">Haz clic en cada tarjeta para consultar sus compromisos respaldados en el CCT. Haz clic sobre el recuadro del integrante para ver su trayectoria.</p>
+            <p class="text-slate-400 text-sm mt-2 max-w-xl">Haz clic sobre el recuadro del integrante para ver su trayectoria. Haz clic en ver propuestas para consultar sus compromisos respaldados en el CCT. </p>
           </div>
           <div class="flex flex-wrap gap-2 mt-6 md:mt-0" id="filter-container">
             <button onclick="filterCards('all')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-accent-500 text-white shadow-sm transition font-scale-ignore">Todos</button>
@@ -179,11 +178,33 @@
             <button onclick="filterCards('paileria')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Pailería</button>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="candidates-grid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="comite-grid"></div>
       </div>
     </section>
 
-    <section id="propuestas" class="py-20 relative bg-brand-950 border-t border-slate-800">
+    <!-- SECCIÓN SEPARADOR: COMISIÓN DE JUSTICIA -->
+    <section id="justicia" class="py-16 bg-gradient-to-r from-brand-900 to-slate-900 border-t border-accent-400/20 shadow-inner">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal-item">
+        <div class="inline-flex items-center justify-center gap-2 text-accent-400 text-xs font-bold uppercase tracking-widest mb-3 font-scale-ignore">
+          <i data-lucide="scale" class="w-4 h-4"></i> Comisión Seccional de Justicia
+        </div>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Garantía de Imparcialidad y Legalidad Sindical</h3>
+        <p class="text-slate-300 text-sm sm:text-base mt-4 max-w-3xl mx-auto leading-relaxed">
+          La justicia interna no es para perseguir compañeros ni para crear favoritismos.<br class="hidden sm:block">
+          Vigilaremos que cada concurso escalafonario, derecho de audiencia y sanción respete estrictamente los Estatutos y el Contrato Colectivo.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: INTEGRANTES DE JUSTICIA -->
+    <section id="equipo-justicia" class="py-16 bg-brand-900/20 border-b border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="justicia-grid"></div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: BUSCADOR DE COMPROMISOS -->
+    <section id="propuestas" class="py-20 relative bg-brand-950">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
           <span class="text-accent-400 font-bold uppercase tracking-widest text-xs font-scale-ignore">Blindaje Jurídico</span>
@@ -198,35 +219,8 @@
       </div>
     </section>
 
-    <section id="justicia" class="py-16 bg-gradient-to-r from-brand-900 to-slate-900 border-t border-b border-accent-400/20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="lg:flex lg:items-center lg:justify-between gap-10">
-          <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 text-accent-400 text-xs font-bold uppercase tracking-widest mb-3 font-scale-ignore">
-              <i data-lucide="scale" class="w-4 h-4"></i> Comisión Seccional de Justicia
-            </div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Garantía de Imparcialidad y Legalidad Sindical</h3>
-            <p class="text-slate-300 text-sm mt-3">
-              La justicia interna no es para perseguir compañeros ni crear favoritismos. Encabezada por <strong>Ricardo J. Hernández Álvarez</strong> e impulsada por <strong>Carlos I. Miranda Arredondo</strong>, vigilamos que cada concurso escalafonario, derecho de audiencia y sanción respete estrictamente los Estatutos y el Contrato Colectivo.
-            </p>
-          </div>
-          <div class="mt-8 lg:mt-0 flex flex-col sm:flex-row gap-4">
-            <div class="p-4 rounded-xl glass-card border border-accent-400/30 text-center flex-1 sm:w-56">
-              <div class="text-xs text-accent-400 font-bold uppercase font-scale-ignore">Presidente Titular</div>
-              <div class="text-lg font-bold text-white mt-1">Ricardo J. Hernández</div>
-              <div class="text-xs text-slate-400 mt-1 font-scale-ignore">Seguridad Industrial</div>
-            </div>
-            <div class="p-4 rounded-xl glass-card border border-accent-400/30 text-center flex-1 sm:w-56">
-              <div class="text-xs text-accent-400 font-bold uppercase font-scale-ignore">Suplente</div>
-              <div class="text-lg font-bold text-white mt-1">Carlos I. Miranda A.</div>
-              <div class="text-xs text-slate-400 mt-1 font-scale-ignore">Eléctrico</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="contacto" class="py-20 bg-brand-950">
+    <!-- SECCIÓN: CONTACTO -->
+    <section id="contacto" class="py-20 bg-brand-950 border-t border-slate-800">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-400 flex items-center justify-center mx-auto mb-6 text-white shadow-xl shadow-brand-600/30"><i data-lucide="send" class="w-8 h-8"></i></div>
         <h2 class="text-3xl font-extrabold text-white">Buzón de Escucha Directa</h2>
@@ -237,9 +231,9 @@
       </div>
     </section>
 
-    <footer class="pt-8 pb-24 bg-brand-950 border-t border-slate-900 text-center text-xs text-slate-500 relative z-10 font-scale-ignore">
+    <footer class="pt-8 pb-10 bg-brand-950 border-t border-slate-900 text-center text-xs text-slate-500 relative z-10 font-scale-ignore">
       <div class="max-w-7xl mx-auto px-4">
-        <p class="font-bold text-slate-400">PLANILLA AZUL — SECCIÓN 148 SUTERM</p>
+        <p class="font-bold text-slate-400">PLANILLA VERDE — SECCIÓN 148 SUTERM</p>
         <p class="mt-1">Compromiso, Transparencia y Respaldo Colectivo 2027-2032</p>
       </div>
     </footer>
@@ -247,7 +241,7 @@
 
   <!-- MODAL PARA PROPUESTAS (CONTENIDO ESCALABLE Aislado) -->
   <div id="proposals-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-    <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md" onclick="closeProposalsModal()"></div>
+    <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeProposalsModal()"></div>
     
     <div class="relative w-full max-w-2xl bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[90vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
       
@@ -270,7 +264,7 @@
 
   <!-- MODAL PARA TRAYECTORIA INDIVIDUAL (CONTENIDO ESCALABLE Aislado) -->
   <div id="trajectory-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-    <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md" onclick="closeTrajectoryModal()"></div>
+    <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeTrajectoryModal()"></div>
     
     <div class="relative w-full max-w-lg bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[80vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
       
@@ -293,49 +287,34 @@
   </div>
 
   <div id="image-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-    <div class="absolute inset-0 bg-brand-950/90 backdrop-blur-sm" onclick="closeImageModal()"></div>
+    <div class="absolute inset-0 bg-brand-950/90 backdrop-blur-sm modal-backdrop" onclick="closeImageModal()"></div>
     <div class="relative max-w-3xl w-full flex justify-center z-10">
       <img id="enlarged-image" src="" alt="Enlarged" class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl border-2 border-accent-400 object-contain transform scale-95 transition-transform duration-300 modal-img-content">
     </div>
   </div>
 
   <script>
-    let currentFontScale = parseFloat(localStorage.getItem('suterm148_font_scale')) || 1.0;
-    const MIN_FONT_SCALE = 1.0;
-    const MAX_FONT_SCALE = 1.45;
-
-    function applyFontScale(scale) {
-      if (scale < MIN_FONT_SCALE) scale = MIN_FONT_SCALE;
-      if (scale > MAX_FONT_SCALE) scale = MAX_FONT_SCALE;
-      
-      scale = Math.round(scale * 100) / 100;
-      
-      currentFontScale = scale;
-      document.documentElement.style.setProperty('--app-font-scale', currentFontScale);
-      
-      const indicator = document.getElementById('font-scale-indicator');
-      if (indicator) indicator.textContent = Math.round(currentFontScale * 100) + '%';
-
-      const decBtn = document.getElementById('btn-font-dec');
-      const incBtn = document.getElementById('btn-font-inc');
-      if (decBtn) decBtn.disabled = (currentFontScale <= MIN_FONT_SCALE);
-      if (incBtn) incBtn.disabled = (currentFontScale >= MAX_FONT_SCALE);
-      if (decBtn) decBtn.classList.toggle('opacity-30', currentFontScale <= MIN_FONT_SCALE);
-      if (incBtn) incBtn.classList.toggle('opacity-30', currentFontScale >= MAX_FONT_SCALE);
-      localStorage.setItem('suterm148_font_scale', currentFontScale);
-    }
-    function adjustFontSize(delta) { applyFontScale(currentFontScale + delta); }
-    function resetFontSize() { applyFontScale(1.0); }
-
     const candidates = [
       { id: 1, cartera: "Secretaría General", tags: ["operacion"], badge: "Comité Ejecutivo", 
         titular: "Jonathan José Urbina Zuarth", ramaTitular: "Operación", trayectoriaTitular: "Técnico electromecánico con 14 años de antigüedad en la central. Especialista en sincronización de turbinas de gas y vapor, habiendo fungido como delegado de turno y enlace en paros mayores. Reconocido por su capacidad de interlocución firme y conciliadora en piso.", 
         suplente: "", ramaSuplente: "", trayectoriaSuplente: "", 
         propuestas: [ { titulo: "Materia de trabajo y defensa de la plantilla", clausula: "Cláusula 4 CCT", desc: "Exigir el respeto irrestricto a la exclusividad de las actividades operativas y de mantenimiento para los trabajadores sindicalizados de la Sección 148, frenando la invasión de contratistas en maniobras propias de la central." }, { titulo: "Presencia permanente en frentes de trabajo y turnos", clausula: "Cláusula 16 CCT y Art. 48 Estatutos", desc: "Implementar guardias y recorridos semanales obligatorios de la dirigencia en cuarto de control, nave de turbinas, subestación y talleres para atender incidencias en tiempo real sin trámites burocráticos." }, { titulo: "Cumplimiento cabal de convenios de productividad", clausula: "Cláusula 25 CCT", desc: "Vincular la alta disponibilidad del ciclo combinado a una gestión transparente del incentivo a la productividad, garantizando que los bonos lleguen equitativamente a todas las áreas involucradas." } ] },
+      
       { id: 2, cartera: "Secretaría de Trabajo", tags: ["mecanico", "operacion"], badge: "Comité Ejecutivo", 
-        titular: "Jamil Selim Cruz Ortiz", ramaTitular: "Mecánico", trayectoriaTitular: "Cuenta con 12 años en mantenimiento mayor y balance de rotores, con liderazgo técnico en talleres y alineación de equipos auxiliares. Heredero de la tradición electricista de su padre Isaac Cruz Cruz (en CFE desde junio de 2002) y con experiencia previa en compañías contratistas (2000-2001) en torres de enfriamiento y montaje de unidades. Ingeniero Industrial por la UNITEC y certificado como Instructor.", 
+        titular: "Jamil Selim Cruz Ortiz", ramaTitular: "Mecánico", 
+        trayectoriaTitular: "Tiene la dicha de pertenecer a esta noble empresa gracias a su padre Isaac Cruz Cruz (en CFE desde junio de 2002). Antes de ser empleado de CFE, laboró de 2000 a 2001 en compañías al servicio de la Central Valle de México en rehabilitación de torres de enfriamiento y montaje de unidades. En sus años de servicio ha pasado desde Ayudante Técnico en el área civil hasta sustituir puestos de Técnico Superior y Técnico Superior Aparatista en el Depto. Mecánico. Consolidó su crecimiento profesional al graduarse como Ingeniero Industrial por la UNITEC y cuenta con certificación como Instructor; actualmente su puesto base es Auxiliar de Mantenimiento. Guiado por su profundo rechazo a las injusticias, busca alzar la voz por todos sus compañeros para lograr un beneficio común.", 
         suplente: "Víctor Manuel García Hernández", ramaSuplente: "Operación", trayectoriaSuplente: "Suma 10 años de experiencia técnica en cuartos de control y procesos de arranque de sistemas de ciclo combinado.", 
-        propuestas: [ { titulo: "Defensa Firme del Contrato Colectivo (CCT) y Cero Retrocesos", clausula: "Cláusulas 1, 4, 10 CCT y Art. 49 Estatutos", desc: "Cumplimiento total del CCT y LFT sin retrocesos. Revisión y transparencia de las minutas firmadas derivadas del reajuste de personal de 2024 para garantizar que ningún compañero haya sido afectado." }, { titulo: "Defensa Irrestricta de la Materia de Trabajo en Central", clausula: "Cláusula 4 CCT y Art. 49 Estatutos", desc: "Monitoreo permanente y legal de los procesos y proyectos en CFE para evitar subcontrataciones indebidas y la cesión de funciones operativas y de mantenimiento a personal ajeno." }, { titulo: "Vigilancia Constante de Insumos y Relaciones en Departamentos", clausula: "Cláusulas 13, 14, 20 CCT", desc: "Monitoreo diario de las incidencias entre personal sindicalizado y de confianza, exigiendo herramientas, consumibles e instalaciones dignas conforme a las normas de seguridad." }, { titulo: "Capacitación Técnica Real para Jóvenes de Nuevo Ingreso", clausula: "Cláusula 23 y 25 CCT", desc: "Trabajar de la mano con la Secretaría de Organización y el Centro de Capacitación para adecuar cursos técnicos reales a las necesidades de la central y del personal de nueva generación." }, { titulo: "Defensa de la Jornada, Tiempo Extra y Viáticos", clausula: "Cláusulas 16, 18, 30, 31 CCT", desc: "Vigilancia del estricto cumplimiento de turnos y pago puntual de tiempo extraordinario, guardias y viáticos, evitando abusos o retrasos en nómina." }, { titulo: "Escalafón Limpio, Transparente y Oportuno", clausula: "Cláusula 43 CCT", desc: "Publicación obligatoria de vacantes definitivas y provisionales en un plazo máximo de 5 días hábiles, garantizando la prelación por antigüedad, comisiones mixtas con observadores y exámenes transparentes." } ] },
+        propuestas: [ 
+          { titulo: "Defensa firme del Contrato Colectivo de Trabajo (CCT)", clausula: "CCT y LFT", desc: "Cero retrocesos en las conquistas laborales logradas por nuestros antecesores. Cumplimiento total del CCT conforme a lo firmado en cada revisión contractual, en conjunto con la Ley Federal del Trabajo y los Estatutos que nos rigen." }, 
+          { titulo: "Revisión de acuerdos por reajuste de personal 2024", clausula: "Transparencia Sindical", desc: "Revisar cada una de las minutas firmadas derivado del reajuste de personal y transparentarlas a todos los agremiados de la central." }, 
+          { titulo: "Defensa de la Materia de trabajo de nuestra central", clausula: "Materia de Trabajo", desc: "Implementar un monitoreo permanente y legal de los procesos y proyectos en la CFE para evitar la subcontratación indebida o la cesión de funciones que corresponden a nuestro CCT." }, 
+          { titulo: "Vigilancia constante de los problemas en departamentos", clausula: "Condiciones de Trabajo", desc: "Monitoreo diario de las incidencias que pueden suceder entre personal sindicalizado y de confianza, así como las carencias que se viven en cada departamento (herramienta, insumos, instalaciones) conforme a las normas establecidas." }, 
+          { titulo: "Promover capacitación para los jóvenes de nuevo ingreso", clausula: "Cláusula 25 CCT", desc: "En conjunto con la Secretaría de Organización y el Centro de Capacitación, adecuar los cursos necesarios para el personal de nuevo ingreso conforme a las necesidades de la empresa." }, 
+          { titulo: "Defensa de la jornada, tiempo extra y viáticos", clausula: "Cláusulas 18, 30, 31 CCT", desc: "Velar por el estricto cumplimiento de los turnos, horarios y el pago transparente y oportuno de las horas extras, guardias y viáticos, evitando abusos o retrasos en la nómina." },
+          { titulo: "Transparencia en Contratación, Ascensos y Movimientos", clausula: "Escalafón", desc: "Dar seguimiento correcto y transparente a las contrataciones y movimientos de ascensos conforme al Escalafón y a los acuerdos departamentales firmados por los agremiados." },
+          { titulo: "Visita constante a cada uno de nuestros departamentos", clausula: "Atención Seccional", desc: "Dar atención personalizada en cada uno de nuestros departamentos para darle seguimiento a sus inquietudes y constatar de manera personal las anomalías que se reportan." } 
+        ] },
+      
       { id: 3, cartera: "Secretaría de Organización", tags: ["quimico", "mecanico"], badge: "Comité Ejecutivo", 
         titular: "José León López", ramaTitular: "Químico", trayectoriaTitular: "Químico analista de ciclo de agua-vapor con 11 años de experiencia en laboratorio y tratamiento de condensados; auditor interno en normas de calidad.", 
         suplente: "Jorge Eduardo Méndez Martínez", ramaSuplente: "Mecánico", trayectoriaSuplente: "Aporta 8 años de experiencia en sistemas hidráulicos y lubricación de equipos rotativos.", 
@@ -349,10 +328,10 @@
         suplente: "José Luis Pérez Hernández", ramaSuplente: "Operación", trayectoriaSuplente: "Cuenta con 11 años de experiencia en planta de gas y procesos operativos de ciclo combinado con riguroso control metodológico.", 
         propuestas: [ { titulo: "Rendición de cuentas semestral por escrito", clausula: "Art. 53 y 95 Estatutos", desc: "Envío digital e impreso del corte de caja del fondo sindical y cuotas seccionales a cada miembro antes de cada asamblea ordinaria." }, { titulo: "Auditoría del Fondo de Ahorro y Préstamos Sindicales", clausula: "Cláusula 66 y 74 CCT", desc: "Apertura de trámites transparentes y asignación inmediata de fondos de emergencia para los trabajadores sin preferencias personales." }, { titulo: "Optimización de recursos para beneficio colectivo", clausula: "Cláusula 75 CCT y Art. 53 Estatutos", desc: "Destinar remanentes de gestión sindical al mejoramiento de las instalaciones del sindicato, áreas de descanso y fomento de eventos deportivos/sociales para los agremiados y sus familias." } ] },
       { id: 6, cartera: "Secretaría del Interior", tags: ["operacion", "quimico"], badge: "Comité Ejecutivo", 
-        titular: "Carlos Castillo Islas", ramaTitular: "Operación", trayectoriaTitular: "Cuenta con 15 años de rol continuo en operation de ciclo combinado y destreza en maniobras de contingencia.", 
+        titular: "Carlos Castillo Islas", ramaTitular: "Operación", trayectoriaTitular: "Cuenta con 15 años de rol continuo en operación de ciclo combinado y destreza en maniobras de contingencia.", 
         suplente: "Mario Jesús Vallejo Martínez", ramaSuplente: "Químico", trayectoriaSuplente: "Tiene 9 años en supervisión de dosificación química de caldera y manejo de materiales técnicos de alta pureza.", 
         propuestas: [ { titulo: "Asambleas informativas democráticas y regulares", clausula: "Art. 47 y 88 Estatutos", desc: "Convocatorias con orden del día claro, publicación de actas de asamblea en menos de 48 horas y respeto total al uso de la palabra para cualquier agremiado." }, { titulo: "Defensa ante actas administrativas patronales", clausula: "Cláusula 13 CCT y Art. 47 Estatutos", desc: "Presencia obligatoria y asesoría jurídica inmediata de la representación sindical antes de que cualquier trabajador rinda declaración o firme documentos ante relaciones laborales." }, { titulo: "Respeto a descansos contractuales y rotación equitativa", clausula: "Cláusula 16 CCT y Art. 47 Estatutos", desc: "Monitoreo estricto de las jornadas en rol de turno para impedir que la administración aplique dobles turnos sin apego al convenio interno de rotación." } ] },
-      { id: 7, cartera: "Secretaría de Relaciones", tags: ["mecanico", "operacion"], badge: "Comité Ejecutivo", 
+      { id: 7, cartera: "Secretaría de Relaciones Obreras", tags: ["mecanico", "operacion"], badge: "Comité Ejecutivo", 
         titular: "Felipe Cornejo Maya", ramaTitular: "Mecánico", trayectoriaTitular: "Cuenta con 10 años operando calderas de recuperación HRSG, tuberías de alta presión y maniobras de riesgo mecánico.", 
         suplente: "Juan Ernesto Tovar Guerrero", ramaSuplente: "Operación", trayectoriaSuplente: "Suma 8 años en sistemas auxiliares de operación, actuando como promotor de integración laboral entre cuadrillas.", 
         propuestas: [ { titulo: "Convenios locales de bienestar familiar", clausula: "Cláusula 77 CCT y Art. 50 Estatutos", desc: "Celebración de alianzas con instituciones educativas, comercios y centros deportivos locales para otorgar descuentos y becas directas a los hijos de los trabajadores." }, { titulo: "Protección a las condiciones de traslado y viáticos", clausula: "Cláusulas 27 y 28 CCT", desc: "Garantizar transporte seguro en caso de tiempos extraordinarios fuera de rol y pago estricto de compensaciones por traslados forzosos o cursos fuera de sede." }, { titulo: "Enlace proactivo con jubilados de la sección", clausula: "Cláusula 84 CCT y Art. 50 Estatutos", desc: "Módulo permanente de asesoría sindical para compañeros en proceso de retiro y seguimiento a sus derechos vigentes ante la CFE." } ] },
@@ -396,8 +375,10 @@
     }
 
     function renderCandidates(items, activeCategory = 'all') {
-      const grid = document.getElementById('candidates-grid');
-      grid.innerHTML = items.map(c => {
+      const comiteGrid = document.getElementById('comite-grid');
+      const justiciaGrid = document.getElementById('justicia-grid');
+
+      const buildHTML = (cItems) => cItems.map(c => {
         const isTitularMatch = activeCategory === 'all' || c.tags[0] === activeCategory || (c.tags.length === 1 && c.tags[0] === activeCategory);
         const isSuplenteMatch = c.suplente && (activeCategory === 'all' || c.tags[1] === activeCategory || (c.tags.length === 1 && c.tags[0] === activeCategory));
         
@@ -411,7 +392,6 @@
             <h3 class="text-xl font-bold text-white tracking-wide mb-4">${c.cartera}</h3>
             <div class="space-y-4">
               ${isTitularMatch ? `
-              <!-- Todo el recuadro del Titular abre el modal de trayectoria, excepto la imagen circular -->
               <div class="flex items-center gap-4 bg-brand-900/40 p-3 rounded-xl border border-slate-700/50 hover:border-accent-400/50 hover:bg-brand-900/60 transition cursor-pointer group" onclick="openTrajectoryModal(${c.id}, 'titular')">
                 <div class="w-14 h-14 rounded-full bg-slate-800 border-2 border-accent-500 overflow-hidden flex-shrink-0 shadow-lg relative avatar-ring" onclick="event.stopPropagation()">
                   <img src="${getImgPath(c.titular.split('/')[0])}" alt="${c.titular}" onclick="openImageModal(this.src, event)" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'; this.parentElement.classList.add('p-2');">
@@ -423,7 +403,6 @@
                 </div>
               </div>` : ''}
               ${isSuplenteMatch ? `
-              <!-- Todo el recuadro del Suplente abre el modal de trayectoria, excepto la imagen circular -->
               <div class="flex items-center gap-4 pl-4 border-l-2 border-slate-700 hover:border-accent-400/50 transition cursor-pointer group" onclick="openTrajectoryModal(${c.id}, 'suplente')">
                 <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden flex-shrink-0 relative" onclick="event.stopPropagation()">
                   <img src="${getImgPath(c.suplente.split('/')[0])}" alt="${c.suplente}" onclick="openImageModal(this.src, event)" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition duration-300" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23475569\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'; this.parentElement.classList.add('p-1.5');">
@@ -446,7 +425,23 @@
         </div>
       `;
       }).join('');
+
+      const comiteItems = items.filter(c => c.badge === "Comité Ejecutivo");
+      const justiciaItems = items.filter(c => c.badge === "Comisión de Justicia");
+
+      if (comiteGrid) comiteGrid.innerHTML = buildHTML(comiteItems);
+      if (justiciaGrid) justiciaGrid.innerHTML = buildHTML(justiciaItems);
+      
       lucide.createIcons();
+
+      // INICIALIZACIÓN DE VANILLA TILT PARA LAS TARJETAS
+      VanillaTilt.init(document.querySelectorAll(".glass-card"), {
+        max: 6,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.15,
+        scale: 1.02
+      });
     }
 
     function filterCards(category) {
@@ -463,18 +458,29 @@
       document.getElementById('proposals-header-title').innerHTML = `<i data-lucide="award" class="w-5 h-5 text-accent-400"></i> ${candidate.cartera}`;
 
       const modalBody = document.getElementById('proposals-body');
+      
       modalBody.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-4 mb-2">
-           <div class="flex-1 bg-brand-950/60 p-4 rounded-xl border border-slate-700/80 shadow-inner">
-             <div class="text-[11px] uppercase tracking-wider font-bold text-accent-400 font-scale-ignore">Titular</div>
-             <div class="text-sm font-bold text-white mt-1">${candidate.titular}</div>
-             <div class="text-xs text-slate-400 mt-0.5">${candidate.ramaTitular}</div>
+           <div class="flex-1 flex items-center gap-3 bg-brand-950/60 p-4 rounded-xl border border-slate-700/80 shadow-inner">
+             <div class="w-12 h-12 rounded-full bg-slate-800 border-2 border-accent-500 overflow-hidden flex-shrink-0 relative avatar-ring font-scale-ignore">
+               <img src="${getImgPath(candidate.titular.split('/')[0])}" alt="${candidate.titular}" onclick="openImageModal(this.src, event)" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'; this.parentElement.classList.add('p-2');">
+             </div>
+             <div>
+               <div class="text-[11px] uppercase tracking-wider font-bold text-accent-400 font-scale-ignore">Titular</div>
+               <div class="text-sm font-bold text-white mt-0.5">${candidate.titular}</div>
+               <div class="text-xs text-slate-400 mt-0.5">${candidate.ramaTitular}</div>
+             </div>
            </div>
            ${candidate.suplente ? `
-           <div class="flex-1 bg-brand-950/40 p-4 rounded-xl border border-slate-800/80 shadow-inner">
-             <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400 font-scale-ignore">Suplente</div>
-             <div class="text-sm font-bold text-slate-200 mt-1">${candidate.suplente}</div>
-             <div class="text-xs text-slate-500 mt-0.5">${candidate.ramaSuplente}</div>
+           <div class="flex-1 flex items-center gap-3 bg-brand-950/40 p-4 rounded-xl border border-slate-800/80 shadow-inner">
+             <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden flex-shrink-0 relative font-scale-ignore">
+               <img src="${getImgPath(candidate.suplente.split('/')[0])}" alt="${candidate.suplente}" onclick="openImageModal(this.src, event)" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23475569\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'; this.parentElement.classList.add('p-1.5');">
+             </div>
+             <div>
+               <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400 font-scale-ignore">Suplente</div>
+               <div class="text-sm font-bold text-slate-200 mt-0.5">${candidate.suplente}</div>
+               <div class="text-xs text-slate-500 mt-0.5">${candidate.ramaSuplente}</div>
+             </div>
            </div>
            ` : ''}
         </div>
@@ -501,7 +507,15 @@
       
       const modal = document.getElementById('proposals-modal');
       modal.classList.remove('hidden');
-      setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('.modal-content').classList.remove('scale-95'); modal.querySelector('.modal-content').classList.add('scale-100'); }, 10);
+      
+      // Reiniciar scroll justo después de que la modal ya no está oculta (display: flex)
+      modalBody.scrollTop = 0;
+
+      setTimeout(() => { 
+        modal.classList.remove('opacity-0'); 
+        modal.querySelector('.modal-content').classList.remove('scale-95'); 
+        modal.querySelector('.modal-content').classList.add('scale-100'); 
+      }, 10);
       lucide.createIcons();
     }
 
@@ -553,7 +567,15 @@
 
       const modal = document.getElementById('trajectory-modal');
       modal.classList.remove('hidden');
-      setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('.modal-content').classList.remove('scale-95'); modal.querySelector('.modal-content').classList.add('scale-100'); }, 10);
+      
+      // Reiniciar scroll justo después de que la modal ya no está oculta (display: flex)
+      modalBody.scrollTop = 0;
+
+      setTimeout(() => { 
+        modal.classList.remove('opacity-0'); 
+        modal.querySelector('.modal-content').classList.remove('scale-95'); 
+        modal.querySelector('.modal-content').classList.add('scale-100'); 
+      }, 10);
       lucide.createIcons();
     }
 
@@ -627,7 +649,7 @@
     }
 
     function setupScrollReveal() {
-      const items = document.querySelectorAll('.glass-card, .filter-btn');
+      const items = document.querySelectorAll('.glass-card, .filter-btn, .reveal-item');
       const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); } }); }, { threshold: 0.1 });
       items.forEach(item => { item.classList.add('reveal-item'); observer.observe(item); });
     }
@@ -660,7 +682,6 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      applyFontScale(currentFontScale);
       initEnergyCanvas(); setTimeout(setupScrollReveal, 100); renderCandidates(candidates, 'all'); setTimeout(setupScrollReveal, 50); searchPropuestas(); lucide.createIcons();
     });
   </script>
