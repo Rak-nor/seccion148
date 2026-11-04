@@ -67,6 +67,11 @@
     .animate-float {
       animation: float 4s ease-in-out infinite;
     }
+
+    /* FIX: Prevenir scroll del body cuando un modal está activo */
+    body.modal-open {
+        overflow: hidden;
+    }
   </style>
 </head>
 <body class="bg-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white">
@@ -235,7 +240,7 @@
   </main>
 
   <!-- MODAL PARA PROPUESTAS -->
-  <div id="proposals-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+  <div id="proposals-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300 overscroll-contain">
     <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeProposalsModal()"></div>
     
     <div class="relative w-full max-w-2xl bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[90vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
@@ -245,7 +250,7 @@
         </h3>
       </div>
 
-      <div id="proposals-body" class="overflow-y-auto custom-scrollbar p-6 sm:p-8 space-y-8 scalable-text-content">
+      <div id="proposals-body" class="overflow-y-auto custom-scrollbar p-6 sm:p-8 space-y-8 scalable-text-content overscroll-contain">
       </div>
 
       <div class="sticky bottom-0 z-50 bg-brand-900/95 backdrop-blur-xl border-t border-accent-400/30 px-6 py-4 flex justify-end">
@@ -258,7 +263,7 @@
   </div>
 
   <!-- MODAL PARA TRAYECTORIA INDIVIDUAL -->
-  <div id="trajectory-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+  <div id="trajectory-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300 overscroll-contain">
     <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeTrajectoryModal()"></div>
     
     <div class="relative w-full max-w-lg bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[80vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
@@ -269,7 +274,7 @@
         </h3>
       </div>
 
-      <div id="trajectory-body" class="overflow-y-auto custom-scrollbar p-6 space-y-6 scalable-text-content">
+      <div id="trajectory-body" class="overflow-y-auto custom-scrollbar p-6 space-y-6 scalable-text-content overscroll-contain">
       </div>
 
       <div class="sticky bottom-0 z-50 bg-brand-900/95 backdrop-blur-xl border-t border-accent-400/30 px-6 py-4 flex justify-end">
@@ -281,7 +286,7 @@
     </div>
   </div>
 
-  <div id="image-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+  <div id="image-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300 overscroll-contain">
     <div class="absolute inset-0 bg-brand-950/90 backdrop-blur-sm modal-backdrop" onclick="closeImageModal()"></div>
     <div class="relative max-w-3xl w-full flex justify-center z-10">
       <img id="enlarged-image" src="" alt="Enlarged" class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl border-2 border-accent-400 object-contain transform scale-95 transition-transform duration-300 modal-img-content">
@@ -329,7 +334,7 @@
       { id: 7, cartera: "Secretaría de Relaciones Obreras", tags: ["mecanico", "operacion"], badge: "Comité Ejecutivo", 
         titular: "Felipe Cornejo Maya", ramaTitular: "Mecánico", trayectoriaTitular: "Cuenta con 10 años operando calderas de recuperación HRSG, tuberías de alta presión y maniobras de riesgo mecánico.", 
         suplente: "Juan Ernesto Tovar Guerrero", ramaSuplente: "Operación", trayectoriaSuplente: "Suma 8 años en sistemas auxiliares de operación, actuando como promotor de integración laboral entre cuadrillas.", 
-        propuestas: [ { titulo: "Convenios locales de bienestar familiar", clausula: "Cláusula 77 CCT y Art. 50 Estatutos", desc: "Celebración de alianzas con instituciones educativas, comercios y centros deportivos locales para otorgar descuentos y becas directas a los hijos de los trabajadores." }, { titulo: "Protección a las condiciones de traslado y viáticos", clausula: "Cláusulas 27 y 28 CCT", desc: "Garantizar transporte seguro en caso de tiempos extraordinarios fuera de rol y pago estricto de compensaciones por traslados forzosos o cursos fuera de sede." }, { titulo: "Enlace proactivo con jubilados de la sección", clausula: "Cláusula 84 CCT y Art. 50 Estatutos", desc: "Módulo permanente de asesoría sindical para compañeros en proceso de retiro y seguimiento a sus derechos vigentes ante la CFE." } ] },
+        propuestas: [ { titulo: "Convenios locales de bienestar familiar", clausula: "Cláusula 77 CCT y Art. 50 Estatutos", desc: "Celebración de alianzas con institutions educativas, comercios y centros deportivos locales para otorgar descuentos y becas directas a los hijos de los trabajadores." }, { titulo: "Protección a las condiciones de traslado y viáticos", clausula: "Cláusulas 27 y 28 CCT", desc: "Garantizar transporte seguro en caso de tiempos extraordinarios fuera de rol y pago estricto de compensaciones por traslados forzosos o cursos fuera de sede." }, { titulo: "Enlace proactivo con jubilados de la sección", clausula: "Cláusula 84 CCT y Art. 50 Estatutos", desc: "Módulo permanente de asesoría sindical para compañeros en proceso de retiro y seguimiento a sus derechos vigentes ante la CFE." } ] },
       { id: 8, cartera: "Presidencia de Justicia", tags: ["seguridad", "electrico"], badge: "Comisión de Justicia", 
         titular: "Ricardo José Hernández Álvarez", ramaTitular: "Seguridad Industrial", trayectoriaTitular: "Cuenta con 12 años coordinando comisiones de seguridad, análisis de riesgos y normatividad industrial en planta.", 
         suplente: "Carlos I. Miranda Arredondo", ramaSuplente: "Eléctrico", trayectoriaSuplente: "Suma 11 años de especialidad en mantenimiento eléctrico de subestaciones y motores, reconocido por su solvencia técnica y apego a la imparcialidad estatutaria, para garantizar el debido proceso en el levantamiento de actas en piso y evitar sanciones sin sustento o con fines políticos.", 
@@ -359,6 +364,7 @@
       const img = document.getElementById('enlarged-image');
       img.src = imgSrc;
       modal.classList.remove('hidden');
+      document.body.classList.add('modal-open');
       setTimeout(() => { modal.classList.remove('opacity-0'); img.classList.remove('scale-95'); img.classList.add('scale-100'); }, 10);
     }
 
@@ -366,6 +372,7 @@
       const modal = document.getElementById('image-modal');
       const img = document.getElementById('enlarged-image');
       modal.classList.add('opacity-0'); img.classList.remove('scale-100'); img.classList.add('scale-95');
+      document.body.classList.remove('modal-open');
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
@@ -501,6 +508,7 @@
       
       const modal = document.getElementById('proposals-modal');
       modal.classList.remove('hidden');
+      document.body.classList.add('modal-open');
       modalBody.scrollTop = 0;
 
       setTimeout(() => { 
@@ -514,6 +522,7 @@
     function closeProposalsModal() {
       const modal = document.getElementById('proposals-modal');
       modal.classList.add('opacity-0'); modal.querySelector('.modal-content').classList.remove('scale-100'); modal.querySelector('.modal-content').classList.add('scale-95');
+      document.body.classList.remove('modal-open');
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
@@ -559,6 +568,7 @@
 
       const modal = document.getElementById('trajectory-modal');
       modal.classList.remove('hidden');
+      document.body.classList.add('modal-open');
       modalBody.scrollTop = 0;
 
       setTimeout(() => { 
@@ -572,6 +582,7 @@
     function closeTrajectoryModal() {
       const modal = document.getElementById('trajectory-modal');
       modal.classList.add('opacity-0'); modal.querySelector('.modal-content').classList.remove('scale-100'); modal.querySelector('.modal-content').classList.add('scale-95');
+      document.body.classList.remove('modal-open');
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
