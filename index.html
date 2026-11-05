@@ -20,17 +20,12 @@
     }
   </script>
   <style>
-    .glass-card { background: rgba(30, 58, 138, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.18); }
-    .glass-nav { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(56, 189, 248, 0.15); }
     .text-gradient { background: linear-gradient(135deg, #ffffff 20%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
     .modal-backdrop { transition: opacity 0.3s ease-out, backdrop-filter 0.3s ease-out; }
     .modal-content { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
   
     #scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #0284c7, #38bdf8, #0ea5e9); z-index: 100; width: 0%; box-shadow: 0 0 10px #38bdf8; transition: width 0.1s ease-out; }
-
-    .glass-card { position: relative; background: rgba(30, 58, 138, 0.65); backdrop-filter: blur(14px); border: 1px solid rgba(56, 189, 248, 0.2); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-    .glass-card:hover { border-color: rgba(56, 189, 248, 0.55); box-shadow: 0 12px 35px -8px rgba(14, 165, 233, 0.25), 0 0 20px -3px rgba(56, 189, 248, 0.2); transform: translateY(-4px); }
 
     .avatar-ring { position: relative; }
     .avatar-ring::after { content: ''; position: absolute; inset: -3px; border-radius: 9999px; background: conic-gradient(from 0deg, #38bdf8, #0284c7, #0ea5e9, #38bdf8); z-index: -1; opacity: 0.6; animation: spin-glow 6s linear infinite; }
@@ -68,13 +63,67 @@
       animation: float 4s ease-in-out infinite;
     }
 
-    /* FIX: Prevenir scroll del body cuando un modal está activo */
-    body.modal-open {
-        overflow: hidden;
+    body.modal-open { overflow: hidden; }
+
+    /* =========================================
+       EFECTO GLASSMORFISMO 100% COMPATIBLE 
+       ========================================= */
+    
+    .glass-nav { 
+        background: rgba(30, 58, 138, 0.4); 
+        backdrop-filter: blur(16px); 
+        -webkit-backdrop-filter: blur(16px); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); 
+    }
+    
+    .glass-card { 
+        position: relative; 
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%); 
+        backdrop-filter: blur(20px); 
+        -webkit-backdrop-filter: blur(20px); 
+        border: 1px solid rgba(255, 255, 255, 0.05); 
+        border-top: 1px solid rgba(255, 255, 255, 0.25); 
+        border-left: 1px solid rgba(255, 255, 255, 0.25); 
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); 
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+    }
+    
+    .glass-card:hover { 
+        border-color: rgba(56, 189, 248, 0.4); 
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%); 
+        box-shadow: 0 12px 35px -8px rgba(14, 165, 233, 0.35), 0 0 20px -3px rgba(56, 189, 248, 0.2); 
+        transform: translateY(-4px); 
+    }
+
+    .glass-modal {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.6) 0%, rgba(30, 64, 175, 0.35) 100%);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.5);
+    }
+    
+    .glass-modal-header {
+        background: rgba(30, 64, 175, 0.35);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .glass-modal-footer {
+        background: rgba(30, 64, 175, 0.35);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
-<body class="bg-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white">
+<body class="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-800 via-brand-900 to-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white relative min-h-screen bg-fixed">
+  
+  <!-- Luces de fondo globales fijas (crean la refracción del cristal) -->
+  <div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] min-w-[300px] min-h-[300px] bg-cyan-400/40 rounded-full mix-blend-screen filter blur-[80px] pointer-events-none" style="z-index: -1;"></div>
+  <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] min-w-[350px] min-h-[350px] bg-blue-500/40 rounded-full mix-blend-screen filter blur-[100px] pointer-events-none" style="z-index: -1;"></div>
+  <div class="fixed top-[40%] left-[20%] w-[30vw] h-[30vw] min-w-[250px] min-h-[250px] bg-indigo-400/30 rounded-full mix-blend-screen filter blur-[90px] pointer-events-none" style="z-index: -1;"></div>
+
   <div id="scroll-progress"></div>
 
   <div id="toast-msg" class="px-5 py-3 rounded-xl bg-brand-900/95 border border-accent-400 text-white text-xs font-semibold shadow-2xl flex items-center gap-2 backdrop-blur-md">
@@ -96,24 +145,23 @@
         <button id="menu-btn" onclick="toggleMenu(event)" class="p-2 rounded-lg text-slate-300 hover:text-white transition focus:outline-none" title="Menú de Secciones">
           <i data-lucide="menu" class="w-7 h-7"></i>
         </button>
-        <div id="menu-dropdown" class="absolute right-0 mt-2 w-56 bg-brand-950/95 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl opacity-0 invisible transition-all duration-200 z-50 overflow-hidden transform origin-top-right scale-95">
-          <a href="#equipo" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/80 border-b border-slate-800 transition">Comité Ejecutivo</a>
-          <a href="#justicia" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/80 border-b border-slate-800 transition">Comisión de Justicia</a>
-          <a href="#propuestas" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/80 border-b border-slate-800 transition">Buscador de Compromisos</a>
-          <a href="#contacto" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/80 transition">Buzón de Escucha</a>
+        <div id="menu-dropdown" class="absolute right-0 mt-2 w-56 glass-modal rounded-xl shadow-2xl opacity-0 invisible transition-all duration-200 z-50 overflow-hidden transform origin-top-right scale-95">
+          <a href="#equipo" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/50 border-b border-white/5 transition">Comité Ejecutivo</a>
+          <a href="#justicia" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/50 border-b border-white/5 transition">Comisión de Justicia</a>
+          <a href="#propuestas" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/50 border-b border-white/5 transition">Buscador de Compromisos</a>
+          <a href="#contacto" onclick="toggleMenu()" class="block px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-brand-900/50 transition">Buzón de Escucha</a>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="scalable-text-content">
+  <main class="scalable-text-content relative z-10">
     <section id="inicio" class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       <canvas id="hero-energy-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-40 z-0"></canvas>
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(14,165,233,0.18),transparent_50%)]"></div>
-      <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <div class="inline-flex flex-col items-center gap-1 px-5 py-3 rounded-2xl border border-accent-400/40 bg-accent-500/10 text-accent-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 font-scale-ignore shadow-[0_0_15px_rgba(56,189,248,0.2)] animate-float">
+        <div class="inline-flex flex-col items-center gap-1 px-5 py-3 rounded-2xl glass-card text-accent-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 font-scale-ignore animate-float">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-accent-400 animate-pulse"></span>
             <span>¡TU VOTO PUEDE SER DECISIVO!</span>
@@ -136,19 +184,19 @@
           </a>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto text-left">
-          <div class="p-4 rounded-xl glass-card border border-white/5">
+          <div class="p-4 rounded-xl glass-card">
             <div class="text-2xl font-black text-accent-400 font-scale-ignore">100%</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold font-scale-ignore">Técnicos de Piso</div>
           </div>
-          <div class="p-4 rounded-xl glass-card border border-white/5">
+          <div class="p-4 rounded-xl glass-card">
             <div class="text-2xl font-black text-accent-400 font-scale-ignore">Cl. 43</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold font-scale-ignore">Escalafón Limpio</div>
           </div>
-          <div class="p-4 rounded-xl glass-card border border-white/5">
+          <div class="p-4 rounded-xl glass-card">
             <div class="text-2xl font-black text-accent-400 font-scale-ignore">Semestral</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold font-scale-ignore">Rendición de Cuentas</div>
           </div>
-          <div class="p-4 rounded-xl glass-card border border-white/5">
+          <div class="p-4 rounded-xl glass-card">
             <div class="text-2xl font-black text-accent-400 font-scale-ignore">Cl. 69/84</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold font-scale-ignore">Auditoría CIJUBILA</div>
           </div>
@@ -157,7 +205,7 @@
     </section>
 
     <!-- SECCIÓN: COMITÉ EJECUTIVO -->
-    <section id="equipo" class="pt-20 pb-16 bg-brand-900/20 border-t border-slate-800">
+    <section id="equipo" class="pt-20 pb-16 border-t border-slate-800 relative z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
@@ -166,16 +214,16 @@
             <p class="text-slate-400 text-sm mt-2 max-w-xl">Haz clic sobre el recuadro del integrante para ver su trayectoria. Haz clic en ver propuestas para consultar sus compromisos respaldados en el CCT. </p>
           </div>
           <div class="flex flex-wrap gap-2 mt-6 md:mt-0" id="filter-container">
-            <button onclick="filterCards('all')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-accent-500 text-white shadow-sm transition font-scale-ignore">Todos</button>
-            <button onclick="filterCards('operacion')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Operación</button>
-            <button onclick="filterCards('mecanico')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Mecánico</button>
-            <button onclick="filterCards('electrico')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Eléctrico</button>
-            <button onclick="filterCards('quimico')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Químico</button>
-            <button onclick="filterCards('admin')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Administración</button>
-            <button onclick="filterCards('seguridad')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Seguridad Ind.</button>
-            <button onclick="filterCards('civil')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Civil</button>
-            <button onclick="filterCards('inst')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Inst. y Ctrl</button>
-            <button onclick="filterCards('paileria')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Pailería</button>
+            <button onclick="filterCards('all', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-accent-500 text-white shadow-sm transition font-scale-ignore">Todos</button>
+            <button onclick="filterCards('operacion', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Operación</button>
+            <button onclick="filterCards('mecanico', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Mecánico</button>
+            <button onclick="filterCards('electrico', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Eléctrico</button>
+            <button onclick="filterCards('quimico', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Químico</button>
+            <button onclick="filterCards('admin', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Administración</button>
+            <button onclick="filterCards('seguridad', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Seguridad Ind.</button>
+            <button onclick="filterCards('civil', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Civil</button>
+            <button onclick="filterCards('inst', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Inst. y Ctrl</button>
+            <button onclick="filterCards('paileria', this)" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-900/80 text-slate-300 hover:text-white border border-slate-700/60 transition font-scale-ignore">Pailería</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="comite-grid"></div>
@@ -183,7 +231,7 @@
     </section>
 
     <!-- SECCIÓN SEPARADOR: COMISIÓN DE JUSTICIA -->
-    <section id="justicia" class="py-16 bg-gradient-to-r from-brand-900 to-slate-900 border-t border-accent-400/20 shadow-inner">
+    <section id="justicia" class="py-16 glass-nav shadow-inner relative z-10 border-t-0">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal-item">
         <div class="inline-flex items-center justify-center gap-2 text-accent-400 text-xs font-bold uppercase tracking-widest mb-3 font-scale-ignore">
           <i data-lucide="scale" class="w-4 h-4"></i> Comisión Seccional de Justicia
@@ -197,14 +245,14 @@
     </section>
 
     <!-- SECCIÓN: INTEGRANTES DE JUSTICIA -->
-    <section id="equipo-justicia" class="py-16 bg-brand-900/20 border-b border-slate-800">
+    <section id="equipo-justicia" class="py-16 border-b border-slate-800 relative z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="justicia-grid"></div>
       </div>
     </section>
 
     <!-- SECCIÓN: BUSCADOR DE COMPROMISOS -->
-    <section id="propuestas" class="py-20 relative bg-brand-950">
+    <section id="propuestas" class="py-20 relative relative z-10">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
           <span class="text-accent-400 font-bold uppercase tracking-widest text-xs font-scale-ignore">Blindaje Jurídico</span>
@@ -212,7 +260,7 @@
           <p class="text-slate-400 text-sm mt-2">Escribe un tema de tu interés (ej. <em>Escalafón</em>, <em>Botas</em>, <em>Turnos</em>, <em>CIJUBILA</em>) y consulta el sustento contractual.</p>
           <div class="mt-6 max-w-xl mx-auto relative font-scale-ignore">
             <i data-lucide="search" class="w-5 h-5 absolute left-4 top-3.5 text-slate-400"></i>
-            <input type="text" id="cct-search" oninput="searchPropuestas()" placeholder="Buscar por tema o cláusula (ej: 43, EPP, retiro, salario)..." class="w-full pl-12 pr-4 py-3 bg-brand-900/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 transition shadow-inner text-sm">
+            <input type="text" id="cct-search" oninput="searchPropuestas()" placeholder="Buscar por tema o cláusula (ej: 43, EPP, retiro, salario)..." class="w-full pl-12 pr-4 py-3 glass-card rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-accent-400 transition text-sm">
           </div>
         </div>
         <div id="propuestas-results" class="space-y-4"></div>
@@ -220,18 +268,18 @@
     </section>
 
     <!-- SECCIÓN: CONTACTO -->
-    <section id="contacto" class="py-20 bg-brand-950 border-t border-slate-800">
+    <section id="contacto" class="py-20 border-t border-slate-800 relative z-10">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-400 flex items-center justify-center mx-auto mb-6 text-white shadow-xl shadow-brand-600/30"><i data-lucide="send" class="w-8 h-8"></i></div>
         <h2 class="text-3xl font-extrabold text-white">Buzón de Escucha Directa</h2>
         <p class="text-slate-300 text-sm mt-2 max-w-xl mx-auto">¿Tienes una propuesta técnica o inquietud particular sobre tu turno o departamento? Déjanos tu mensaje directo. Tu opinión define nuestra agenda.</p>
-        <div class="mt-8 glass-card p-4 sm:p-6 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+        <div class="mt-8 glass-card p-4 sm:p-6 rounded-2xl overflow-hidden">
           <iframe id="google-form-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSceeIl_3OTiLLRsiEGd-l9qnoCRPosVX0fT2niaoBafIkGzqA/viewform?embedded=true" width="100%" height="850" frameborder="0" marginheight="0" marginwidth="0" class="rounded-xl w-full bg-slate-900/60">Cargando formulario...</iframe>
         </div>
       </div>
     </section>
 
-    <footer class="pt-8 pb-10 bg-brand-950 border-t border-slate-900 text-center text-xs text-slate-500 relative z-10 font-scale-ignore">
+    <footer class="pt-8 pb-10 border-t border-slate-900 text-center text-xs text-slate-500 relative z-10 font-scale-ignore">
       <div class="max-w-7xl mx-auto px-4">
         <p class="font-bold text-slate-400">PLANILLA AZUL — SECCIÓN 148 SUTERM</p>
         <p class="mt-1">Compromiso, Transparencia y Respaldo Colectivo 2027-2032</p>
@@ -243,9 +291,9 @@
   <div id="proposals-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300 overscroll-contain">
     <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeProposalsModal()"></div>
     
-    <div class="relative w-full max-w-2xl bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[90vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
+    <div class="relative w-full max-w-2xl glass-modal rounded-2xl z-10 max-h-[90vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
       
-      <div class="sticky top-0 z-50 bg-brand-900/95 backdrop-blur-xl border-b border-accent-400/30 px-6 py-4 flex items-center justify-between">
+      <div class="sticky top-0 z-50 glass-modal-header px-6 py-4 flex items-center justify-between">
         <h3 id="proposals-header-title" class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 font-scale-ignore">
         </h3>
       </div>
@@ -253,8 +301,8 @@
       <div id="proposals-body" class="overflow-y-auto custom-scrollbar p-6 sm:p-8 space-y-8 scalable-text-content overscroll-contain">
       </div>
 
-      <div class="sticky bottom-0 z-50 bg-brand-900/95 backdrop-blur-xl border-t border-accent-400/30 px-6 py-4 flex justify-end">
-        <button onclick="closeProposalsModal()" class="px-6 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 text-white text-sm font-bold uppercase tracking-wider transition shadow-lg font-scale-ignore">
+      <div class="sticky bottom-0 z-50 glass-modal-footer px-6 py-4 flex justify-end">
+        <button onclick="closeProposalsModal()" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold uppercase tracking-wider transition shadow-lg font-scale-ignore">
           Cerrar
         </button>
       </div>
@@ -266,9 +314,9 @@
   <div id="trajectory-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300 overscroll-contain">
     <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-md modal-backdrop" onclick="closeTrajectoryModal()"></div>
     
-    <div class="relative w-full max-w-lg bg-brand-900 border border-accent-400/40 rounded-2xl shadow-2xl z-10 max-h-[80vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
+    <div class="relative w-full max-w-lg glass-modal rounded-2xl z-10 max-h-[80vh] flex flex-col modal-content transform scale-95 transition-transform duration-300 overflow-hidden">
       
-      <div class="sticky top-0 z-50 bg-brand-900/95 backdrop-blur-xl border-b border-accent-400/30 px-6 py-4 flex items-center justify-between">
+      <div class="sticky top-0 z-50 glass-modal-header px-6 py-4 flex items-center justify-between">
         <h3 class="text-lg font-black text-white flex items-center gap-2 font-scale-ignore">
            <i data-lucide="user" class="w-4 h-4 text-accent-400"></i> Perfil y Trayectoria
         </h3>
@@ -277,8 +325,8 @@
       <div id="trajectory-body" class="overflow-y-auto custom-scrollbar p-6 space-y-6 scalable-text-content overscroll-contain">
       </div>
 
-      <div class="sticky bottom-0 z-50 bg-brand-900/95 backdrop-blur-xl border-t border-accent-400/30 px-6 py-4 flex justify-end">
-        <button onclick="closeTrajectoryModal()" class="px-6 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 text-white text-sm font-bold uppercase tracking-wider transition shadow-lg font-scale-ignore">
+      <div class="sticky bottom-0 z-50 glass-modal-footer px-6 py-4 flex justify-end">
+        <button onclick="closeTrajectoryModal()" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold uppercase tracking-wider transition shadow-lg font-scale-ignore">
           Cerrar
         </button>
       </div>
@@ -339,16 +387,16 @@
         titular: "Ricardo José Hernández Álvarez", ramaTitular: "Seguridad Industrial", trayectoriaTitular: "Cuenta con 12 años coordinando comisiones de seguridad, análisis de riesgos y normatividad industrial en planta.", 
         suplente: "Carlos I. Miranda Arredondo", ramaSuplente: "Eléctrico", trayectoriaSuplente: "Suma 11 años de especialidad en mantenimiento eléctrico de subestaciones y motores, reconocido por su solvencia técnica y apego a la imparcialidad estatutaria, para garantizar el debido proceso en el levantamiento de actas en piso y evitar sanciones sin sustento o con fines políticos.", 
         propuestas: [ { titulo: "Garantía del debido proceso", clausula: "Art. 59, 64 y 79 Estatutos", desc: "Garantizar el derecho de audiencia y la presunción de inocencia en toda investigación, evitando sanciones sin expediente y vigilando la imparcialidad en los concursos de vacantes definitivas." } ] },
-      { id: 9, cartera: "Secretaría de Justicia", tags: ["mecanico", "electrico"], badge: "Comisión de Justicia", 
+      { id: 9, cartera: "Secretaría de Justicia", tags: ["mecanico", "inst"], badge: "Comisión de Justicia", 
         titular: "Noel Mercado Cervantes", ramaTitular: "Mecánico", trayectoriaTitular: "Amplia experiencia en mantenimiento y resolución de controversias operativas, asegurando siempre el cumplimiento de normativas.", 
-        suplente: "Julio César Torres Paredes", ramaSuplente: "Eléctrico", trayectoriaSuplente: "Especialista enfocado en asegurar el cumplimiento de las normativas de seguridad y los derechos laborales del agremiado.", 
+        suplente: "Brígido Rivas Martínez", ramaSuplente: "Inst y Ctrl", trayectoriaSuplente: "Perfil altamente técnico en precisión de instrumentos, garantizando que ninguna falla de telemetría en planta se penalice injustamente.", 
         propuestas: [ { titulo: "Actas y dictámenes transparentes", clausula: "Art. 64 y 72 Estatutos", desc: "Asegurar el levantamiento riguroso de actas y resoluciones, resguardando la evidencia de cada caso para blindar al agremiado ante represalias infundadas." } ] },
       { id: 10, cartera: "Vocalía 1 de Justicia", tags: ["quimico", "civil"], badge: "Comisión de Justicia", 
         titular: "Fredy Tamayo Castelán", ramaTitular: "Químico", trayectoriaTitular: "Especialista con alta capacidad analítica en laboratorio químico, enfocado en el bienestar y equidad técnica del agremiado.", 
         suplente: "Edgar Flores Retana", ramaSuplente: "Civil", trayectoriaSuplente: "Especialista en control civil e infraestructura, garantizando imparcialidad técnica en contingencias en planta.", 
         propuestas: [ { titulo: "Neutralidad en recolección de pruebas", clausula: "Art. 64 y 68 Estatutos", desc: "Recabar pruebas con total neutralidad técnica en controversias escalafonarias, mediando mediante el diálogo antes de llegar a la sanción." } ] },
-      { id: 11, cartera: "Vocalía 2 de Justicia", tags: ["inst", "paileria"], badge: "Comisión de Justicia", 
-        titular: "Brígido Rivas Martínez", ramaTitular: "Inst y Ctrl", trayectoriaTitular: "Perfil altamente técnico en precisión de instrumentos, garantizando que ninguna falla de telemetría en planta se penalice injustamente.", 
+      { id: 11, cartera: "Vocalía 2 de Justicia", tags: ["electrico", "paileria"], badge: "Comisión de Justicia", 
+        titular: "Julio César Torres Paredes", ramaTitular: "Eléctrico", trayectoriaTitular: "Especialista enfocado en asegurar el cumplimiento de las normativas de seguridad y los derechos laborales del agremiado.", 
         suplente: "Ignacio Abundio Néstor García", ramaSuplente: "Pailería", trayectoriaSuplente: "Especialista en pailería, aportando solvencia técnica en revisiones de maniobras pesadas.", 
         propuestas: [ { titulo: "Supervisión de procesos sancionatorios", clausula: "Art. 64 y 79 Estatutos", desc: "Supervisar que la actuación patronal respete el marco estatutario interno y que los procesos se ejecuten con apego a derecho y sin distingos." } ] }
     ];
@@ -385,7 +433,7 @@
         const isSuplenteMatch = c.suplente && (activeCategory === 'all' || c.tags[1] === activeCategory || (c.tags.length === 1 && c.tags[0] === activeCategory));
         
         return `
-        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:border-accent-400/50 hover:shadow-xl hover:shadow-sky-500/10 transition duration-300 transform hover:-translate-y-1">
+        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between transition duration-300 transform hover:-translate-y-1">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded bg-accent-500/20 text-accent-400 border border-accent-400/30 font-scale-ignore">${c.badge}</span>
@@ -421,7 +469,7 @@
               <p class="text-xs text-slate-300 mt-1">${c.propuestas[0].titulo}</p>
             </div>
           </div>
-          <button onclick="openProposalsModal(${c.id})" class="mt-6 w-full py-2.5 px-4 rounded-xl bg-brand-900 hover:bg-brand-800 text-accent-300 hover:text-white border border-accent-400/30 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition duration-200 shadow-sm font-scale-ignore">
+          <button onclick="openProposalsModal(${c.id})" class="mt-6 w-full py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition duration-200 shadow-sm font-scale-ignore">
             <span>Ver Propuestas</span><i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
         </div>
@@ -445,11 +493,30 @@
       });
     }
 
-    function filterCards(category) {
-      document.querySelectorAll('.filter-btn').forEach(btn => { btn.classList.remove('bg-accent-500', 'text-white'); btn.classList.add('bg-brand-900/80', 'text-slate-300'); });
-      event.target.classList.add('bg-accent-500', 'text-white'); event.target.classList.remove('bg-brand-900/80', 'text-slate-300');
-      if (category === 'all') { renderCandidates(candidates, 'all'); setTimeout(setupScrollReveal, 50); } 
-      else { const filtered = candidates.filter(c => c.tags.includes(category)); renderCandidates(filtered, category); setTimeout(setupScrollReveal, 50); }
+    function filterCards(category, btnElement) {
+      document.querySelectorAll('.filter-btn').forEach(btn => { 
+          btn.classList.remove('bg-accent-500', 'text-white'); 
+          btn.classList.add('bg-brand-900/80', 'text-slate-300'); 
+      });
+      
+      if(btnElement) {
+          btnElement.classList.add('bg-accent-500', 'text-white'); 
+          btnElement.classList.remove('bg-brand-900/80', 'text-slate-300');
+      } else {
+          const allBtn = document.querySelector('.filter-btn');
+          if(allBtn) {
+              allBtn.classList.add('bg-accent-500', 'text-white');
+              allBtn.classList.remove('bg-brand-900/80', 'text-slate-300');
+          }
+      }
+
+      if (category === 'all') { 
+          renderCandidates(candidates, 'all'); 
+      } else { 
+          const filtered = candidates.filter(c => c.tags.includes(category)); 
+          renderCandidates(filtered, category); 
+      }
+      setTimeout(setupScrollReveal, 50);
     }
 
     function openProposalsModal(id) {
@@ -492,7 +559,7 @@
           </h4>
           <div class="space-y-4">
             ${candidate.propuestas.map((p, idx) => `
-              <div class="p-4 sm:p-5 rounded-xl bg-brand-900/40 border border-slate-700/80">
+              <div class="glass-card p-4 sm:p-5 rounded-xl border border-slate-700/80">
                 <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                   <span class="text-sm sm:text-base font-bold text-white flex-1">${idx + 1}. ${p.titulo}</span>
                   <span class="text-[11px] font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded border border-accent-400/30 text-center max-w-full sm:max-w-[140px] break-words flex-shrink-0">
@@ -544,7 +611,7 @@
               <div class="text-xs text-slate-300 font-medium mt-0.5">${candidate.ramaTitular}</div>
             </div>
           </div>
-          <div class="text-sm text-slate-300 bg-brand-950/50 p-5 rounded-xl border border-slate-700/80 shadow-inner">
+          <div class="text-sm text-slate-300 glass-card p-5 rounded-xl border border-slate-700/80 shadow-inner">
             <p>${candidate.trayectoriaTitular}</p>
           </div>
         `;
@@ -560,7 +627,7 @@
               <div class="text-xs text-slate-300 font-medium mt-0.5">${candidate.ramaSuplente}</div>
             </div>
           </div>
-          <div class="text-sm text-slate-300 bg-brand-950/50 p-5 rounded-xl border border-slate-700/80 shadow-inner">
+          <div class="text-sm text-slate-300 glass-card p-5 rounded-xl border border-slate-700/80 shadow-inner">
             <p>${candidate.trayectoriaSuplente}</p>
           </div>
         `;
@@ -592,7 +659,7 @@
       const container = document.getElementById('propuestas-results');
       if (list.length === 0) { container.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm"><p>No se encontraron compromisos relacionados. Prueba con términos como <em>Escalafón, EPP, CIJUBILA, Capacitación, Rol de turnos</em>.</p></div>`; return; }
       container.innerHTML = list.map(item => `
-        <div class="glass-card p-4 sm:p-5 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-slate-800 hover:border-accent-400/40 transition">
+        <div class="glass-card p-4 sm:p-5 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition">
           <div class="max-w-2xl">
             <div class="flex items-center gap-2 mb-1">
               <span class="text-[11px] font-bold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded border border-accent-400/30 max-w-[140px] text-center break-words font-scale-ignore">
@@ -683,7 +750,7 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      initEnergyCanvas(); setTimeout(setupScrollReveal, 100); renderCandidates(candidates, 'all'); setTimeout(setupScrollReveal, 50); searchPropuestas(); lucide.createIcons();
+      initEnergyCanvas(); setTimeout(setupScrollReveal, 100); filterCards('all', null); searchPropuestas(); lucide.createIcons();
     });
   </script>
 </body>
