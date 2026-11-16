@@ -160,6 +160,27 @@ header.glass-nav { padding-top: 10px; padding-bottom: 10px; }
 body { padding-top: var(--campaign-header-height, 94px); }
 #inicio { padding-top: 36px !important; }
 main section[id] { scroll-margin-top: calc(var(--campaign-header-height, 94px) + 14px); }
+</style><style>
+/* Botón minimalista en el encabezado, sin agrandar su altura */
+.header-welcome{flex:0 0 auto!important;width:44px!important;min-width:44px!important;max-width:44px!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center}
+.welcome-mini-button{width:42px;height:42px;border-radius:9999px;background:linear-gradient(135deg,#2563eb,#0ea5e9);border:1px solid rgba(255,255,255,.35);box-shadow:0 3px 12px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;transition:transform .15s ease}
+.welcome-mini-button:active{transform:scale(.94)}
+.welcome-mini-button:focus-visible{outline:2px solid #bae6fd;outline-offset:3px}
+.header-inner{display:flex!important;flex-wrap:nowrap!important;gap:8px!important}
+.header-brand{flex:1 1 auto!important;min-width:0!important}
+.header-brand>div:last-child{min-width:0}
+.header-menu{flex:0 0 auto!important;margin-left:0!important}
+@media(max-width:850px){.header-welcome{grid-column:auto!important;grid-row:auto!important}.header-brand{grid-column:auto!important;grid-row:auto!important}.header-menu{grid-column:auto!important;grid-row:auto!important}}
+@media(max-width:430px){.header-inner{padding-left:10px!important;padding-right:10px!important;gap:7px!important}.header-brand{gap:7px!important}.header-brand>div:first-child{width:38px!important;height:42px!important;flex-shrink:0}.header-brand span:first-child{font-size:clamp(14px,4vw,19px)!important}.header-brand span:nth-child(2){font-size:10px!important;letter-spacing:.07em!important}.header-brand span:nth-child(3){font-size:9px!important;letter-spacing:.03em!important}.header-menu button{padding:5px!important}.welcome-mini-button{width:39px;height:39px}.header-welcome{width:39px!important;min-width:39px!important;max-width:39px!important}}
+
+/* Indicador de bienvenida: no ocupa espacio en el encabezado */
+.header-welcome{position:relative!important;overflow:visible!important;isolation:isolate}
+.welcome-hint{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:5px;white-space:nowrap;color:#fff;font-size:12px;font-weight:800;font-style:italic;letter-spacing:.01em;text-shadow:0 0 5px #38bdf8,0 0 12px rgba(14,165,233,.8);pointer-events:none;z-index:60;transition:opacity .25s ease,visibility .25s ease}
+.welcome-hint svg{width:19px;height:19px;flex:none;filter:drop-shadow(0 0 5px #38bdf8);animation:welcome-point 1.6s ease-in-out infinite}
+.welcome-hint.is-hidden{opacity:0;visibility:hidden}
+@keyframes welcome-point{0%,100%{transform:translateY(-2px) rotate(-12deg)}50%{transform:translateY(3px) rotate(-12deg)}}
+@media(prefers-reduced-motion:reduce){.welcome-hint svg{animation:none}}
+@media(max-width:430px){.welcome-hint{font-size:10px;gap:2px;bottom:calc(100% + 5px)}.welcome-hint svg{width:15px;height:15px}}
 </style></head>
 <body class="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-800 via-brand-900 to-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white relative min-h-screen bg-fixed">
 <div id="closing-screen" role="main" style="position:fixed;inset:0;z-index:99999;overflow:auto;min-height:100dvh;align-items:center;justify-content:center;background:radial-gradient(ellipse at top,#302617 0%,#101114 57%);color:#fff;font-family:system-ui,-apple-system,sans-serif;padding:28px 18px;text-align:center;box-sizing:border-box">
@@ -183,26 +204,7 @@ main section[id] { scroll-margin-top: calc(var(--campaign-header-height, 94px) +
 <span class="block text-[11px] sm:text-xs font-semibold text-slate-300 uppercase tracking-widest leading-none">C.C.C. “VALLE DE MÉXICO”</span>
 </div>
 </div>
-<aside aria-label="Reproductor de bienvenida institucional" class="header-welcome rounded-xl border border-sky-400/40 bg-slate-950/95 text-white font-scale-ignore" id="welcome-player">
-<div class="flex items-center gap-3">
-<button aria-label="Reproducir bienvenida" aria-pressed="false" class="shrink-0 w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 flex items-center justify-center shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300" id="welcome-toggle" type="button">
-<svg aria-hidden="true" fill="currentColor" height="22" id="welcome-play-icon" viewbox="0 0 24 24" width="22"><path d="M8 5v14l11-7z"></path></svg>
-</button>
-<div class="min-w-0 flex-1">
-<p class="font-bold text-sm leading-tight">Bienvenida institucional</p>
-<p class="text-xs text-sky-200 mt-1" id="welcome-status" role="status">Toca para escuchar</p>
-</div>
-<button aria-label="Escuchar desde el inicio" class="p-2 rounded-lg hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300" id="welcome-restart" title="Escuchar desde el inicio" type="button">
-<svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
-</button>
-</div>
-<audio id="welcome-audio" preload="none" src="bienvenida.mp3"></audio>
-<div class="flex items-center gap-2 mt-3">
-<span class="text-[11px] text-slate-300 tabular-nums" id="welcome-current">0:00</span>
-<input aria-label="Posición de la narración" class="flex-1 min-w-0 h-1 accent-sky-400 cursor-pointer" id="welcome-progress" max="100" min="0" step="0.1" type="range" value="0">
-<span class="text-[11px] text-slate-300 tabular-nums" id="welcome-duration">--:--</span>
-</input></div>
-</aside><div class="relative header-menu">
+<aside aria-label="Bienvenida institucional" class="header-welcome font-scale-ignore" id="welcome-player"><span class="welcome-hint" id="welcome-hint" aria-hidden="true"><span>¡Dale Play!</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5a2 2 0 0 1 4 0v6-2a2 2 0 0 1 4 0v2a2 2 0 0 1 4 0v5c0 3-2 5-5 5h-3c-2 0-3-1-4-3l-3-5a2 2 0 0 1 3-2l2 2"/></svg></span><button aria-label="Reproducir bienvenida institucional" aria-pressed="false" class="welcome-mini-button" id="welcome-toggle" title="Reproducir / pausar bienvenida" type="button"><svg aria-hidden="true" fill="currentColor" height="22" id="welcome-play-icon" viewBox="0 0 24 24" width="22"><path d="M8 5v14l11-7z"></path></svg></button><audio id="welcome-audio" preload="none" src="bienvenida.mp3"></audio><span class="sr-only" id="welcome-status" role="status">Toca para escuchar</span></aside><div class="relative header-menu">
 <button class="p-2 rounded-lg text-slate-300 hover:text-white transition focus:outline-none" id="menu-btn" onclick="toggleMenu(event)" title="Menú de Secciones">
 <i class="w-7 h-7" data-lucide="menu"></i>
 </button>
@@ -997,47 +999,33 @@ main section[id] { scroll-margin-top: calc(var(--campaign-header-height, 94px) +
     });
   </script>
 <!-- Reproductor de bienvenida institucional: se inicia solo por interacción del visitante -->
-
 <script>
-    (() => {
-      const audio = document.getElementById('welcome-audio');
-      const toggle = document.getElementById('welcome-toggle');
-      const icon = document.getElementById('welcome-play-icon');
-      const restart = document.getElementById('welcome-restart');
-      const progress = document.getElementById('welcome-progress');
-      const current = document.getElementById('welcome-current');
-      const duration = document.getElementById('welcome-duration');
-      const status = document.getElementById('welcome-status');
-      const fmt = seconds => Number.isFinite(seconds) ? `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2,'0')}` : '--:--';
-      const render = () => {
-        const playing = !audio.paused && !audio.ended;
-        icon.innerHTML = playing ? '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
-        toggle.setAttribute('aria-label', playing ? 'Pausar bienvenida' : 'Reproducir bienvenida');
-        toggle.setAttribute('aria-pressed', String(playing));
-        status.textContent = playing ? 'Reproduciendo presentación' : audio.ended ? 'Terminó · vuelve a escuchar' : audio.currentTime > 0 ? 'En pausa' : 'Toca para escuchar';
-        current.textContent = fmt(audio.currentTime);
-        duration.textContent = fmt(audio.duration);
-        if (Number.isFinite(audio.duration) && audio.duration > 0) progress.value = String(100 * audio.currentTime / audio.duration);
-      };
-      toggle.addEventListener('click', async () => {
-        if (!audio.paused) { audio.pause(); return; }
-        if (audio.ended) audio.currentTime = 0;
-        if (window.closeSunoPlayer) window.closeSunoPlayer();
-        try { await audio.play(); } catch (error) { status.textContent = 'No se pudo reproducir el audio'; }
-      });
-      restart.addEventListener('click', async () => {
-        audio.currentTime = 0;
-        if (window.closeSunoPlayer) window.closeSunoPlayer();
-        try { await audio.play(); } catch (error) { status.textContent = 'No se pudo reproducir el audio'; }
-      });
-      progress.addEventListener('input', () => {
-        if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(progress.value) * audio.duration / 100;
-      });
-      for (const event of ['loadedmetadata','timeupdate','play','pause','ended','seeked']) audio.addEventListener(event, render);
-      audio.addEventListener('error', () => { status.textContent = 'No se encontró bienvenida.mp3'; });
-      render();
-    })();
-  </script>
+(() => {
+  const audio = document.getElementById('welcome-audio');
+  const toggle = document.getElementById('welcome-toggle');
+  const icon = document.getElementById('welcome-play-icon');
+  const status = document.getElementById('welcome-status');
+  const hint = document.getElementById('welcome-hint');
+  if (!audio || !toggle || !icon) return;
+  const render = () => {
+    const playing = !audio.paused && !audio.ended;
+    icon.innerHTML = playing ? '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+    toggle.setAttribute('aria-label', playing ? 'Pausar bienvenida institucional' : 'Reproducir bienvenida institucional');
+    toggle.setAttribute('aria-pressed', String(playing));
+    status.textContent = playing ? 'Reproduciendo' : 'Listo para escuchar';
+  };
+  toggle.addEventListener('click', async () => {
+    if (hint) hint.classList.add('is-hidden');
+    if (!audio.paused) { audio.pause(); return; }
+    if (audio.ended || (Number.isFinite(audio.duration) && audio.currentTime >= audio.duration)) audio.currentTime = 0;
+    if (window.closeSunoPlayer) window.closeSunoPlayer();
+    try { await audio.play(); } catch (error) { status.textContent = 'No se pudo reproducir la bienvenida'; }
+  });
+  for (const event of ['play','pause','ended','loadedmetadata']) audio.addEventListener(event, render);
+  audio.addEventListener('error', () => { status.textContent = 'No se encontró bienvenida.mp3'; });
+  render();
+})();
+</script>
 <script>
 (() => {
  const header = document.querySelector('header.glass-nav');
