@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-
-<html class="scroll-smooth" lang="es">
+<html class="scroll-smooth" lang="es" style="background-color: #102b65; overflow-x: hidden;">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
@@ -22,9 +21,12 @@
 <meta content="PLANILLA AZUL | SECCIÓN 148" name="twitter:title"/>
 <meta content="Unión, justicia y dignidad sindical" name="twitter:description"/>
 <meta content="https://rak-nor.github.io/seccion148/preview.jpg" name="twitter:image"/>
+
+<!-- Scripts con defer para no bloquear el renderizado en móviles -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+<script src="https://unpkg.com/lucide@latest" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js" defer></script>
+
 <script>
     tailwind.config = {
       theme: {
@@ -137,7 +139,8 @@
 /* Ajuste multiplataforma: evitar que elementos anchos amplíen el lienzo. */
 html, body { box-sizing: border-box; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
 *, *::before, *::after { box-sizing: border-box; }
-body { overflow-x: hidden !important; }
+/* Se cambió clip por hidden para mayor compatibilidad */
+body { overflow-x: hidden !important; background-color: #102b65; }
 main, header, footer, section { min-width: 0; }
 main, footer { width: 100%; max-width: 100%; }
 img, video, iframe, svg { max-width: 100%; }
@@ -206,24 +209,23 @@ main section[id] { scroll-margin-top: calc(var(--campaign-header-height, 94px) +
 }
 
 /* Compatibilidad Chrome iPad / Safari: fondo y lienzo a todo el viewport. */
-html { width: 100%; min-width: 100%; min-height: 100%; background-color: #102b65; overflow-x: clip; }
-body { width: 100%; min-width: 100%; max-width: 100%; margin: 0; min-height: 100vh; background-color: #102b65; background-attachment: scroll !important; overflow-x: clip; }
+html { width: 100%; min-width: 100%; min-height: 100%; background-color: #102b65; overflow-x: hidden; }
+body { width: 100%; min-width: 100%; max-width: 100%; margin: 0; min-height: 100vh; background-color: #102b65; background-attachment: scroll !important; overflow-x: hidden; }
 header, main, footer { max-width: 100%; }
 @supports (min-height: 100dvh) { body { min-height: 100dvh; } }
 
-/* Full-bleed layout: Chrome iOS/iPadOS and Android viewport alignment.
-   The content grids retain their existing max-width for readability. */
+/* Full-bleed layout ajustado para evitar barras horizontales en dvw */
 html { margin:0!important; padding:0!important; width:100%!important; min-width:0!important; }
 body { margin:0!important; padding-left:0!important; padding-right:0!important; width:100%!important; min-width:0!important; max-width:none!important; }
 header.glass-nav, main, main > section, main > footer {
   display:block; width:100%!important; max-width:none!important; margin-left:0!important; margin-right:0!important;
 }
 header.glass-nav { position:fixed; left:0!important; right:0!important; }
-main { overflow-x:clip; }
+main { overflow-x:hidden; }
 /* Preserve the original flexible header layout (not a block layout). */
 .header-inner { display:flex; width:100%!important; max-width:1280px!important; margin-inline:auto!important; }
-@supports (width: 100dvw) {
-  header.glass-nav, main, main > section, main > footer { width:100dvw!important; }
+@supports (width: 100vw) {
+  header.glass-nav, main, main > section, main > footer { width:100vw!important; }
 }
 </style></head>
 <body class="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-800 via-brand-900 to-brand-950 text-slate-100 font-sans antialiased selection:bg-accent-500 selection:text-white relative min-h-screen bg-fixed">
@@ -1071,7 +1073,8 @@ main { overflow-x:clip; }
       initEnergyCanvas(); setTimeout(setupScrollReveal, 100); filterCards('all', null); searchPropuestas(); lucide.createIcons();
     });
   </script>
-<!-- Reproductor de bienvenida institucional: se inicia solo por interacción del visitante -->
+
+<!-- Reproductor de bienvenida institucional: optimizado sin async/await -->
 <script>
 (() => {
   const audio = document.getElementById('welcome-audio');
@@ -1080,6 +1083,7 @@ main { overflow-x:clip; }
   const status = document.getElementById('welcome-status');
   const hint = document.getElementById('welcome-hint');
   if (!audio || !toggle || !icon) return;
+  
   const render = () => {
     const playing = !audio.paused && !audio.ended;
     icon.innerHTML = playing ? '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
@@ -1087,14 +1091,31 @@ main { overflow-x:clip; }
     toggle.setAttribute('aria-pressed', String(playing));
     status.textContent = playing ? 'Reproduciendo' : 'Listo para escuchar';
   };
-  toggle.addEventListener('click', async () => {
+  
+  toggle.addEventListener('click', () => {
     if (hint) hint.classList.add('is-hidden');
-    if (!audio.paused) { audio.pause(); return; }
-    if (audio.ended || (Number.isFinite(audio.duration) && audio.currentTime >= audio.duration)) audio.currentTime = 0;
+    if (!audio.paused) { 
+        audio.pause(); 
+        return; 
+    }
+    
+    if (audio.ended || (Number.isFinite(audio.duration) && audio.currentTime >= audio.duration)) {
+        audio.currentTime = 0;
+    }
     if (window.closeSunoPlayer) window.closeSunoPlayer();
-    try { await audio.play(); } catch (error) { status.textContent = 'No se pudo reproducir la bienvenida'; }
+    
+    // Uso de promesas estándar para compatibilidad con teléfonos antiguos
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        status.textContent = 'No se pudo reproducir la bienvenida';
+      });
+    }
   });
-  for (const event of ['play','pause','ended','loadedmetadata']) audio.addEventListener(event, render);
+  
+  for (const event of ['play','pause','ended','loadedmetadata']) {
+      audio.addEventListener(event, render);
+  }
   audio.addEventListener('error', () => { status.textContent = 'No se encontró bienvenida.mp3'; });
   render();
 })();
@@ -1109,5 +1130,6 @@ main { overflow-x:clip; }
  window.addEventListener('resize', update, {passive:true});
  if (window.ResizeObserver) new ResizeObserver(update).observe(header);
 })();
-</script></body>
+</script>
+</body>
 </html>
